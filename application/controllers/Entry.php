@@ -7,6 +7,12 @@ class Entry extends CI_Controller
 	{
 		parent::__construct();
 
+		$this->load->helper('url');
+        $this->load->helper('form');
+        
+        $this->load->model('Entry_model', 'entrym');
+        $this->load->library('form_validation');
+
 		if (!$this->session->userdata('email')) {
 			redirect('auth');
 		}
@@ -16,78 +22,75 @@ class Entry extends CI_Controller
 
 	public function index()
 	{
-		$data['title'] = 'Entry Data Pengecekan Alat';
+		$data['title'] = 'Entry Log-Book';
 		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')]) -> row_array();
-		$user_id = $this->session->userdata('id');
-		$this->load->library('session');
-	
-		$this->load->library('form_validation');
-		 $this->load->database();
-		 $this->load->model(array('Alat_model', 'Kerusakan_model', 'Aturan_model'));
-
-		if (!$this->input->post('data_alat')) {
-			$data['contentuser'] = 'user/entry'; //nama file yang akan jadSi kontent di template
-			$data['listAlat'] = $this->Alat_model->get_alatt_by_id();
-			$this->load->view('templates/header', $data);
-			$this->load->view('templates/sidebar', $data);
-			$this->load->view('templates/topbar', $data);
-			$this->load->view('user/entry', $data);
-			$this->load->view('templates/footer', $data);
-		}else{
-			
-			$this->db->insert('hasil_konsul', $data_hasil);
-			$this->load->view('templates/header', $data);
-			$this->load->view('templates/sidebar', $data);
-			$this->load->view('templates/topbar', $data);
-			$this->load->view('user/hslkonsul', $data);
-			$this->load->view('templates/footer', $data);
-		}
-	}
-
-
-	public function riwayat(){
-
-		$data['title'] = 'Riwayat Diagnosa';
-		$data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')]) -> row_array();
-		$user = $this->session->userdata('email');
-		$this->load->library('session');
-
-		$this->load->model(array('History_model'));
-
-
-		$id = $this->session->userdata('id');
-		
-		$data['listHistory'] = $this->History_model->listHistory($id);
-		$data['listHasil'] = $this->History_model->listHasil($id);
+		 $this->load->library('session');
+          $data['entrydt'] = $this->entrym->getEntryLog();
+         
 
 		
-
 		$this->load->view('templates/header', $data);
 		$this->load->view('templates/sidebar', $data);
 		$this->load->view('templates/topbar', $data);
-		$this->load->view('user/riwayat', $data);
+		$this->load->view('entry/data_entry', $data);
 		$this->load->view('templates/footer', $data);
+		
 	}
 
-	public function createPdf(){
+
+
+
+	public function add_entry()
+    {
+       
+       
+        
+		$this->form_validation->set_rules('tanggal', 'Tanggal', 'required', [
+			'required' => 'Tanggal wajib diisi'
+		]);
+		$this->form_validation->set_rules('jenis_pkj', 'Jenis Pekerjaan', 'required', [
+			'required' => 'Jenis Pekerjaan wajib diisi' 
+		]);
+		$this->form_validation->set_rules('jadwal_dns', 'Jadwal Dinas', 'required', [
+			'required' => 'Jadwal Dinas wajib diisi'
+		]);
+		$this->form_validation->set_rules('keterangan', 'Keterangan', 'required', [
+			'required' => 'Uraian Kegiatan wajib diisi'
+		]);
 		
-	
-        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')]) -> row_array();
-		$user = $this->session->userdata('email');
-		$this->load->library('session');
-
-		$this->load->model(array('History_model'));
-
-
-		$id = $this->session->userdata('id');
 		
-		$data['listHistory'] = $this->History_model->listHistory($id);
-		$data['listHasil'] = $this->History_model->listHasil($id);
+ 
+        if ($this->form_validation->run() === FALSE)
+        {
+        	 $data['title'] = 'Entry Log-Book';        
+       		 $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')]) -> row_array();
 
-		$this->load->library('pdf');
-        $this->pdf->load_view('report/laporankonsul',$data);
+       		  $data['barangs'] = $this->entrym->get('barang', null);
+            $this->load->view('templates/header', $data);
+			$this->load->view('templates/sidebar', $data);
+			$this->load->view('templates/topbar', $data);
+			$this->load->view('entry/add_entry', $data);
+			$this->load->view('templates/footer', $data);
+ 
+        }
+        else
+        {
 
-	}
+        	$input = $this->input->post(null, true);
+            $insert = $this->entrym->insert('entry_log', $input);
+
+            if ($insert) {
+                set_pesan('data berhasil disimpan');
+                redirect('barang');
+            } else {
+                set_pesan('gagal menyimpan data');
+                redirect('barang/tambah');
+            }
+        }
+    }
+        
+
+
 	
 
 

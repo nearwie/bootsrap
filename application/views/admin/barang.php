@@ -46,7 +46,7 @@
           			<div class="box-header with-border">
 						<a href="<?= base_url('barang/tambah');?>" class="btn btn-outline-dark" ><i class="fa fa-plus"></i> Tambah Barang</a>
 						<a href="<?= site_url()?>laporan/createPdf/" class="btn btn-outline-warning" title="Cetak Data" target="_blank"><i class="fa fa-print " ></i> Cetak</a>
-						<a href="<?= site_url()?>laporan/createPdf/" class="btn btn-outline-primary" title="Unduh Data" target="_blank"><i class="fa  fa-download"></i> Unduh</a>
+						
 					</div>
 					<hr>
 					

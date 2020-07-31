@@ -31,7 +31,9 @@
     <hr class="line-title">
 <!--<div class="container-fluid"> -->
     <center><h5>LAPORAN PERSEDIAAN PIAS DAN TINTA</h5>
-        <h5>Bulan <?= date ('m Y'); ?></h5>
+        <h5>Bulan <?= bulan (). " ".Date('Y');  ?> 
+     
+        </h5>
        
     <table border = "1" class="table table-bordered" width="100%">
         <thead>
@@ -78,7 +80,7 @@
                     <tr>
                         <td align="center" scope="col" width="40%" style="font-size: 14px" >Mengetahui,</td>
                         <td align="center" scope="col" width="10%">&nbsp;</td>
-                        <td align="center" scope="col" width="50%" style="font-size: 14px">Lombok Barat, <?= date("d-m-Y")?></td>
+                        <td align="center" scope="col" width="50%" style="font-size: 14px">Lombok Barat, <?= tanggal()?></td>
                     </tr>
                     <tr>
                         <td align="center" style="font-size: 14px">Kepala Seksi Observasi </td>

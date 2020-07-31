@@ -56,7 +56,7 @@
 				      <td style="text-align: center;"><?= $u['role_id'] == 1 ? "admin" : "user";?></td>
 				      <td><?= $u['password'];?></td>
 				      <td style="text-align: center;"><?= $u['is_active'];?></td>
-				      <td style="text-align: center;"><?= date ('d F Y', $u['date_created']); ?></td>
+				      <td style="text-align: center;"><?php date_default_timezone_set('Asia/Jakarta'); ?><?= date ('d F Y, H:i:s', $u['date_created']); ?></td>
 				      <td style="text-align: center;">
 				      	
 				      	<a href="<?php echo base_url('pengguna/edit/'.$u['id']) ?>" class="badge badge-success" > Ubah <i class="fas fa-edit"></i></a>
